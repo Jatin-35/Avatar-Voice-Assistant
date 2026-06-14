@@ -1,0 +1,56 @@
+services:
+
+  # ── Backend — FastAPI / Uvicorn ───────────────────────────────────────────
+  - type: web
+    name: faber-backend
+    runtime: python
+    rootDir: Desktop/faber/backend
+    buildCommand: |
+      apt-get install -y --no-install-recommends libssl-dev libasound2 || true
+      pip install --upgrade pip
+      pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    plan: free
+    envVars:
+      # ── Azure OpenAI ──────────────────────────────────────────────────────
+      - key: AZURE_OPENAI_API_KEY
+        sync: false          # fill in Render dashboard
+      - key: AZURE_OPENAI_ENDPOINT
+        sync: false
+      - key: OPENAI_API_VERSION
+        value: 2024-12-01-preview
+      - key: AZURE_OPENAI_DEPLOYMENT
+        value: gpt-4o-mini
+      # ── Azure Speech TTS ─────────────────────────────────────────────────
+      - key: AZURE_SPEECH_KEY
+        sync: false
+      - key: AZURE_SPEECH_REGION
+        value: centralindia
+      - key: TTS_VOICE_NAME
+        value: hi-IN-AartiNeural
+      - key: TTS_VOICE_LANGUAGE
+        value: hi-IN
+      # ── Deepgram STT ─────────────────────────────────────────────────────
+      - key: DEEPGRAM_API_KEY
+        sync: false
+      # ── CORS — must match your frontend URL exactly ───────────────────────
+      - key: CORS_ORIGINS
+        value: https://faber-frontend.onrender.com
+      # ── Python version ───────────────────────────────────────────────────
+      - key: PYTHON_VERSION
+        value: "3.11.0"
+
+  # ── Frontend — Static Site ────────────────────────────────────────────────
+  - type: web
+    name: faber-frontend
+    runtime: static
+    rootDir: Desktop/faber/frontend
+    staticPublishPath: .
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: no-cache, no-store, must-revalidate
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
