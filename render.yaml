@@ -2,7 +2,7 @@ services:
 
   # ── Backend — FastAPI / Uvicorn ───────────────────────────────────────────
   - type: web
-    name: faber-backend
+    name: botrixai-backend
     runtime: python
     rootDir: backend
     buildCommand: |
@@ -35,14 +35,14 @@ services:
         sync: false
       # ── CORS — must match your frontend URL exactly ───────────────────────
       - key: CORS_ORIGINS
-        value: https://faber-frontend.onrender.com
+        value: https://botrixai-frontend.onrender.com
       # ── Python version ───────────────────────────────────────────────────
       - key: PYTHON_VERSION
         value: "3.11.0"
 
   # ── Frontend — Static Site ────────────────────────────────────────────────
   - type: web
-    name: faber-frontend
+    name: botrixai-frontend
     runtime: static
     rootDir: frontend
     staticPublishPath: .

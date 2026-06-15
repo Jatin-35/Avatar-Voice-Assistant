@@ -1,6 +1,6 @@
 # knowledge_base/
 
-Source documents for Faber's RAG (retrieval-augmented generation).
+Source documents for BotrixAI's RAG (retrieval-augmented generation).
 
 ## How to use
 

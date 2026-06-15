@@ -1,4 +1,4 @@
-# run_backend.ps1 — start the Faber voice backend
+# run_backend.ps1 — start the BotrixAI voice backend
 # Usage:  right-click > Run with PowerShell,  OR  from a terminal:
 #   powershell -ExecutionPolicy Bypass -File .\run_backend.ps1
 
@@ -8,7 +8,7 @@ $ErrorActionPreference = "Stop"
 Set-Location "$PSScriptRoot\backend"
 
 Write-Host "==================================================" -ForegroundColor Cyan
-Write-Host "  Faber Voice Backend" -ForegroundColor Cyan
+Write-Host "  BotrixAI Voice Backend" -ForegroundColor Cyan
 Write-Host "  WebSocket : ws://localhost:8000/ws/voice"        -ForegroundColor Cyan
 Write-Host "  Health    : http://localhost:8000/health"        -ForegroundColor Cyan
 Write-Host "==================================================" -ForegroundColor Cyan
