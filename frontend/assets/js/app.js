@@ -28,7 +28,8 @@ import {
 // ── Session state ─────────────────────────────────────────────────────────────
 let active       = false;
 let botSpeaking  = false;   // bot is currently playing audio
-let micMuted     = false;   // while true, stream silence instead of mic audio
+let micMuted     = false;   // while true, stream silence instead of mic audio (turn-taking)
+let userMuted    = false;   // user pressed the mute toggle → never capture input
 let armed        = false;   // user tapped "Speak": mic open over the bot, awaiting voice
 let armedHits    = 0;
 let safetyTimer  = null;    // fallback if audio_complete never arrives
@@ -55,7 +56,7 @@ function enterSpeaking() {
     micMuted = true;
     setMicArmed(false);
     setMicSpeaking(true);     // button: "Speak"
-    setVizMode('bot');        // visualize Sakshi's voice
+    setVizMode('bot');        // visualize Laxmi's voice
     clearTimeout(safetyTimer);
 }
 
@@ -114,6 +115,8 @@ function onPlaybackIdle() {
 
 // Per-mic-chunk: detect the user's voice while armed, then forward (or mute).
 function onMicChunk(chunk) {
+    // User-muted: stream silence, ignore voice entirely (no capture, no interrupt).
+    if (userMuted) { sendBinary(new ArrayBuffer(chunk.byteLength)); return; }
     if (armed) {
         if (rmsOf(chunk) >= SPEECH_RMS) {
             if (++armedHits >= SPEECH_HITS) { commitInterrupt(); }
@@ -300,3 +303,17 @@ micBtn.addEventListener('click', () => {
     else if (botSpeaking)              armInterrupt(); // open mic to talk over the bot
     else                               stop();         // stop session
 });
+
+// ── Mic mute toggle — when on, no audio input is ever captured ─────────────────
+const muteBtn = document.getElementById('muteBtn');
+if (muteBtn) {
+    const muteIcon = muteBtn.querySelector('i');
+    muteBtn.addEventListener('click', () => {
+        userMuted = !userMuted;
+        muteBtn.classList.toggle('muted', userMuted);
+        if (muteIcon) muteIcon.className = userMuted ? 'bi bi-mic-mute-fill' : 'bi bi-mic-fill';
+        muteBtn.setAttribute('aria-label', userMuted ? 'Unmute microphone' : 'Mute microphone');
+        muteBtn.setAttribute('title', userMuted ? 'Mic muted — tap to unmute' : 'Mute microphone');
+        console.log('[App] User mic mute:', userMuted);
+    });
+}

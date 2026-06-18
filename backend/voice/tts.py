@@ -5,7 +5,9 @@ Uses Azure TTS REST endpoint directly via aiohttp — no azure-cognitiveservices
 SDK required. Avoids SPXERR_INVALID_ARG crashes on Python 3.12/3.13.
 
 Region: centralindia (set AZURE_SPEECH_REGION=centralindia in .env)
-Format: audio-16khz-128kbitrate-mono-mp3 (browser-native MP3 playback)
+Format: audio-24khz-160kbitrate-mono-mp3 — 24 kHz is the NATIVE render rate of
+        Azure neural voices, so this is full-quality (16 kHz was downsampled).
+        Higher (48 kHz) only upsamples the same source, so it adds no real detail.
 """
 
 import base64
@@ -26,7 +28,7 @@ def _headers() -> dict:
     return {
         "Ocp-Apim-Subscription-Key": AZURE_SPEECH_KEY,
         "Content-Type":              "application/ssml+xml",
-        "X-Microsoft-OutputFormat":  "audio-16khz-128kbitrate-mono-mp3",
+        "X-Microsoft-OutputFormat":  "audio-24khz-160kbitrate-mono-mp3",
         "User-Agent":                "WebVoiceAgent/1.0",
     }
 

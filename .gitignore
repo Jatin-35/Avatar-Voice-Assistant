@@ -18,6 +18,9 @@ backend/knowledge_base/faiss_index/
 # ── Logs ─────────────────────────────────────────────────────────────────────
 *.log
 
+# ── Avatar GIF backups (local-only restore points) ───────────────────────────
+*.orig.gif
+
 # ── OS / editor cruft ────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
