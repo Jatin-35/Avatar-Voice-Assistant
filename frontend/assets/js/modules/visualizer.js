@@ -94,7 +94,7 @@ function _loop() {
 
 
     const accent = mode === 'bot'
-        ? 'rgba(37,99,235,'      // blue (Sakshi talking)
+        ? 'rgba(37,99,235,'      // blue (Laxmi talking)
         : 'rgba(46,158,79,';     // green (you)
     const gap = 3;
     const bw  = (W - gap * (N - 1)) / N;

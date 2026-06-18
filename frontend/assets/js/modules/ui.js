@@ -77,7 +77,7 @@ export function setMicSpeaking(on) {
     if (on) {
         micClass('speaking');
         micIcon.className = 'mic-icon bi bi-soundwave';
-        setHint('Tap to talk over Sakshi');
+        setHint('Tap to talk over Laxmi');
     } else {
         micClass('active');
         micIcon.className = 'mic-icon bi bi-stop-fill';

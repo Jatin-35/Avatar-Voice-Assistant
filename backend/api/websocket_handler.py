@@ -46,7 +46,7 @@ from shared.utterance_buffer import UtteranceBuffer, UtteranceBufferConfig
 SILENCE_FALLBACK_SEC = 3.0
 
 # Fixed opening greeting — pre-synthesized at startup so the first one is instant.
-GREETING_TEXT = "नमस्ते! मैं साक्षी हूँ, Sonalika Tractor से। बताइए, मैं आपकी कैसे मदद कर सकती हूँ?"
+GREETING_TEXT = "नमस्ते! मैं लक्ष्मी, TVS King EV Max experience zone में आपका स्वागत करती हूँ। पहले अपना नाम बताइए, फिर मैं आपके नाम के पहले अक्षर से एक मज़ेदार lucky prediction बताऊँगी!"
 
 
 async def handle_voice_websocket(websocket: WebSocket) -> None:
@@ -92,7 +92,10 @@ async def handle_voice_websocket(websocket: WebSocket) -> None:
             pass
 
     # ── UtteranceBuffer ───────────────────────────────────────────────────────
-    utterance_buffer = UtteranceBuffer(UtteranceBufferConfig(debug_logging=True))
+    # debounce_ms low (150) to minimise dead air after the user stops talking;
+    # if they keep talking, the next partial cancels the in-flight LLM, so a short
+    # debounce is safe. (Was 400ms — the main per-turn latency win.)
+    utterance_buffer = UtteranceBuffer(UtteranceBufferConfig(debounce_ms=150, debug_logging=True))
     session.utterance_buffer = utterance_buffer
 
     # ── Barge-in (user interrupts the bot mid-response) ───────────────────────
