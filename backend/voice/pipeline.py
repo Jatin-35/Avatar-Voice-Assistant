@@ -416,7 +416,7 @@ async def get_azure_openai_stream(
     data = {
         "messages": messages,
         "max_tokens": 200,
-        "temperature": 0.6,
+        "temperature": 0.8,
         "stream": True,
     }
     url = (
