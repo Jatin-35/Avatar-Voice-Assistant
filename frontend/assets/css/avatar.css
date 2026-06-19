@@ -19,7 +19,7 @@
     --border: #dce6da;
     --text: #16241b;
     --text-dim: #5d6b62;
-    --accent: #2e9e4f;          /* Sonalika green */
+    --accent: #2e9e4f;          /* brand accent green */
     --accent-dark: #1f7d3c;
     --accent-soft: rgba(46, 158, 79, 0.12);
     --warm: #f3b85f;            /* warm showroom light */
@@ -51,7 +51,7 @@ body {
     /* Real showroom photo on top; CSS gradient below = automatic fallback
        if the image is ever missing. */
     background:
-        url('../image/showroom-bg.png?v=3') center center / cover no-repeat,
+        url('../image/showroom-bg.png?v=4') center center / cover no-repeat,
         linear-gradient(180deg, var(--bg-grad-1) 0%, var(--bg-grad-2) 62%, #cdd9c9 100%);
     background-color: var(--bg);
     pointer-events: none;
@@ -793,19 +793,13 @@ body {
 
 /* ── PORTRAIT (phones, portrait tablets, kiosk standees 1080×1920) ──────────── */
 @media (orientation: portrait) {
-    /* Swap to the portrait showroom backdrop. Order = top→bottom layers:
-       portrait photo → landscape photo (fallback) → gradient (final fallback). */
-    .showroom {
-        background:
-            url('../image/showroom-bg-portrait.png?v=2') center center / cover no-repeat,
-            url('../image/showroom-bg.png?v=3') center 50% / cover no-repeat,
-            linear-gradient(180deg, var(--bg-grad-1) 0%, var(--bg-grad-2) 62%, #cdd9c9 100%);
-    }
+    /* Use the SAME showroom backdrop as landscape (inherits the base .showroom
+       rule = showroom-bg.png, cover-cropped to the tall frame). */
 
     /* Laxmi centred and grounded for a tall frame */
-    .avatar-img   { height: 52vh; max-height: 1100px; bottom: 12%; }
-    .avatar-ring  { width: 60vw; height: 60vw; max-width: 460px; max-height: 460px; bottom: 22%; }
-    .avatar-podium{ width: 46vw; max-width: 340px; bottom: 12%; }
+    .avatar-img   { height: 52vh; max-height: 1100px; bottom: 3%; }
+    .avatar-ring  { width: 60vw; height: 60vw; max-width: 460px; max-height: 460px; bottom: 13%; }
+    .avatar-podium{ width: 46vw; max-width: 340px; bottom: 3%; }
 
     /* Mic + waveform centred at the bottom for natural thumb / touch reach */
     .dock {
@@ -824,7 +818,7 @@ body {
 
 /* ── Small portrait (phones) ───────────────────────────────────────────────── */
 @media (orientation: portrait) and (max-width: 600px) {
-    .avatar-img   { height: 46vh; bottom: 13%; }
+    .avatar-img   { height: 46vh; bottom: 4%; }
     .answer-text  { font-size: 1rem; padding: 12px 18px; }
     .intro-title  { font-size: 2rem; }
     .intro-desc   { font-size: 0.92rem; }
@@ -840,7 +834,7 @@ body {
     .brand-sub    { font-size: 0.9rem; }
     .state-pill   { font-size: 0.95rem; padding: 10px 22px; }
 
-    .avatar-img   { height: 56vh; bottom: 12%; }
+    .avatar-img   { height: 56vh; bottom: 3%; }
 
     .mic-btn      { width: 104px; height: 104px; }
     .mic-icon     { font-size: 2.3rem; }
