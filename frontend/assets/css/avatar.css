@@ -440,17 +440,15 @@ body {
        never gets a GPU compositing layer, which was causing white-frame flicker. */
 }
 
-/* Still image keeps its shadow (static, no GIF-frame re-composite issue). */
+/* NO filter and NO will-change on either avatar video: both force extra GPU
+   compositor layers that caused per-frame transparency flicker with the old
+   animated GIFs. Keep these elements layer-hack-free. */
 #avatarStill {
-    filter: drop-shadow(0 24px 36px rgba(20, 50, 30, 0.22));
     transition: opacity 0s;   /* instant hide/show when speaking starts */
 }
 
-/* Talking GIF: ZERO CSS filter — prevents Chrome GPU compositor from using a
-   white intermediate buffer on every 40 ms GIF frame update (root cause of flicker). */
 .avatar-talking {
     opacity: 0;
-    will-change: opacity;
 }
 
 .avatar-talking.active { opacity: 1; }

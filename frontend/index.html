@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/avatar.css?v=17">
+    <link rel="stylesheet" href="assets/css/avatar.css?v=18">
 </head>
 
 <body>
@@ -51,11 +51,12 @@
             <!-- Laxmi — centre stage -->
             <aside class="avatar-wrap">
                 <div class="avatar-ring" id="avatarGlow"></div>
-                <!-- Still pose — visible when bot is idle -->
-                <img class="avatar-img" id="avatarStill" src="assets/image/humanoid/still_banner.gif?v=4" alt="Laxmi">
-                <!-- Talking GIF — always animating in DOM (opacity:0), shown when bot speaks.
-                     Never restarted mid-response, so the GIF loop seam is never visible. -->
-                <img class="avatar-img avatar-talking" id="avatarTalking" src="assets/image/humanoid/animated_anchor.gif?v=4" alt="">
+                <!-- Alpha-WebM videos replace the old animated GIFs: identical
+                     visuals, ~10x smaller, and no Chrome GIF-compositor
+                     transparency flicker. Both loop continuously (opacity
+                     toggled), so the talking loop never restarts mid-response. -->
+                <video class="avatar-img" id="avatarStill" src="assets/image/humanoid/still_banner.webm?v=5" autoplay loop muted playsinline aria-label="Laxmi"></video>
+                <video class="avatar-img avatar-talking" id="avatarTalking" src="assets/image/humanoid/animated_anchor.webm?v=5" autoplay loop muted playsinline></video>
                 <div class="avatar-podium"></div>
             </aside>
 
