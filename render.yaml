@@ -20,7 +20,7 @@ services:
       - key: OPENAI_API_VERSION
         value: 2024-12-01-preview
       - key: AZURE_OPENAI_DEPLOYMENT
-        value: gpt-4.1-mini
+        value: gpt-4o-mini
       # ── Azure Speech TTS ─────────────────────────────────────────────────
       - key: AZURE_SPEECH_KEY
         sync: false
