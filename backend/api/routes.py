@@ -16,9 +16,13 @@ from core.session import session_manager
 router = APIRouter()
 
 
-@router.get("/health")
+@router.api_route("/health", methods=["GET", "HEAD"])
 async def health_check():
-    """Health check endpoint — used by load balancers and monitoring."""
+    """Health check endpoint — used by load balancers and monitoring.
+
+    Accepts HEAD as well as GET: uptime pingers (e.g. UptimeRobot's default
+    monitor) probe with HEAD, which returned 405 when this was GET-only.
+    """
     from rag.service import rag_service
     rag_ready = getattr(rag_service, "is_ready", False)
     sessions_active = await session_manager.count()
