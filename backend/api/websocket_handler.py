@@ -47,7 +47,7 @@ from shared.utterance_buffer import UtteranceBuffer, UtteranceBufferConfig
 SILENCE_FALLBACK_SEC = 3.0
 
 # Fixed opening greeting — pre-synthesized at startup so the first one is instant.
-GREETING_TEXT = "नमस्ते! मैं लक्ष्मी, TVS King EV Max experience zone में आपका स्वागत करती हूँ। क्या मैं आपका नाम जान सकती हूँ?"
+GREETING_TEXT = "नमस्ते! मैं लक्ष्मी, TVS King Kargo HD EV experience zone में आपका स्वागत करती हूँ। क्या मैं आपका नाम जान सकती हूँ?"
 
 
 async def handle_voice_websocket(websocket: WebSocket) -> None:
