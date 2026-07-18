@@ -166,8 +166,25 @@ def _is_trivial(text: str) -> bool:
     return len(alpha_only) < 6
 
 
+# TTS output is constant-bitrate MP3 (audio-24khz-160kbitrate-mono-mp3 in tts.py).
+# For CBR, real playback duration is exact byte-math — no decoding needed. Keep
+# this in sync with X-Microsoft-OutputFormat if the TTS bitrate ever changes.
+_MP3_BITRATE_BPS = 160_000
+
+
+def _mp3_duration_from_b64(audio_b64: str) -> float:
+    """Real playback duration (seconds) of a CBR MP3 from its base64 length.
+
+    base64 encodes 3 raw bytes per 4 chars; duration = raw_bytes * 8 / bitrate.
+    Accurate for constant-bitrate MP3 (what Azure TTS returns here), unlike the
+    old word-count guess which drifted from the real audio length.
+    """
+    raw_bytes = (len(audio_b64) * 3) / 4
+    return max(0.5, raw_bytes * 8 / _MP3_BITRATE_BPS)
+
+
 def _estimate_duration(text: str) -> float:
-    """Estimate TTS playback duration from word count.
+    """Fallback duration estimate from word count (only when audio is missing).
 
     Uses 150 words/min = 2.5 words/sec as average speech rate.
     Returns seconds (minimum 0.5s).
@@ -322,8 +339,14 @@ class AudioQueueManager:
                         print(f"[AudioQueue] Send error for #{idx}: {e}")
                         break
 
-                    # Estimate duration from text for wait timing
-                    duration_sec = _estimate_duration(text_for_timing) if text_for_timing else 2.0
+                    # Wait timing from REAL audio duration (CBR MP3 byte-math),
+                    # not a word-count guess — keeps the mic-reopen / audio_complete
+                    # timing locked to actual playback length. Falls back to the
+                    # text estimate only if audio_b64 is somehow empty.
+                    duration_sec = (
+                        _mp3_duration_from_b64(audio_b64) if audio_b64
+                        else (_estimate_duration(text_for_timing) if text_for_timing else 2.0)
+                    )
                     total_wait = duration_sec + 0.2
 
                     print(f"[AudioQueue] Waiting {total_wait:.2f}s for sentence #{idx} playback")

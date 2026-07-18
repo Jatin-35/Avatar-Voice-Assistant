@@ -35,6 +35,7 @@ from voice.stt import create_stt_handler
 from voice.pipeline import (
     InterruptionState,
     process_user_speech_parallel,
+    _mp3_duration_from_b64,
 )
 from voice.tts import synthesize_speech_azure
 from llm.prompts import get_system_prompt
@@ -46,7 +47,7 @@ from shared.utterance_buffer import UtteranceBuffer, UtteranceBufferConfig
 SILENCE_FALLBACK_SEC = 3.0
 
 # Fixed opening greeting — pre-synthesized at startup so the first one is instant.
-GREETING_TEXT = "नमस्ते! मैं लक्ष्मी, TVS King EV Max experience zone में आपका स्वागत करती हूँ। पहले अपना नाम बताइए, फिर मैं आपके नाम के पहले अक्षर से एक मज़ेदार lucky prediction बताऊँगी!"
+GREETING_TEXT = "नमस्ते! मैं लक्ष्मी, TVS King EV Max experience zone में आपका स्वागत करती हूँ। क्या मैं आपका नाम जान सकती हूँ?"
 
 
 async def handle_voice_websocket(websocket: WebSocket) -> None:
@@ -306,9 +307,13 @@ async def handle_voice_websocket(websocket: WebSocket) -> None:
             except Exception as e:
                 print(f"[WS] Greeting send error: {e}")
 
-            # Wait for greeting playback then signal completion and open gate
-            # Estimate: ~10 words / 2.5 wps = 4s + 0.5s buffer
-            await asyncio.sleep(4.5)
+            # Wait for the REAL greeting playback duration (CBR MP3 byte-math)
+            # before signalling completion — the old fixed 4.5s guess undershot
+            # the actual ~8s audio, so audio_complete arrived mid-greeting and
+            # the avatar dropped to its still pose while Laxmi was still talking.
+            greeting_sec = _mp3_duration_from_b64(audio_b64)
+            print(f"[WS] Greeting duration: {greeting_sec:.2f}s (real, from audio bytes)")
+            await asyncio.sleep(greeting_sec + 0.5)
             try:
                 await websocket.send_json({"type": "audio_complete"})
             except Exception:

@@ -35,8 +35,9 @@ CORS_ORIGINS: list[str] = os.getenv(
     "CORS_ORIGINS", "http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173"
 ).split(",")
 
-# ── TTS voice (Azure, kept for reference) ────────────────────────────────────
-TTS_VOICE_NAME: str = os.getenv("TTS_VOICE_NAME", "hi-IN-AartiNeural")
+# ── TTS voice ─────────────────────────────────────────────────────────────────
+# Meera Dragon HD — natural pacing, verified on centralindia. Env can override.
+TTS_VOICE_NAME: str = os.getenv("TTS_VOICE_NAME", "en-IN-Meera:DragonHDLatestNeural")
 TTS_VOICE_LANGUAGE: str = os.getenv("TTS_VOICE_LANGUAGE", "hi-IN")
 
 # ── ElevenLabs TTS ────────────────────────────────────────────────────────────

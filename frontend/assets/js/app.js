@@ -16,7 +16,7 @@
  */
 
 import { startCapture, stopCapture, getMicStream } from './modules/audio-capture.js';
-import { enqueue, clearQueue, setOnIdle } from './modules/audio-player.js';
+import { enqueue, clearQueue, setOnIdle, setOnFirstPlaying } from './modules/audio-player.js';
 import { connect, sendBinary, sendJSON, disconnect } from './modules/ws-client.js';
 import { initBotVisualizer, initMicVisualizer, startViz, setVizMode, resumeViz } from './modules/visualizer.js';
 import {
@@ -100,8 +100,14 @@ function commitInterrupt() {
     setAvatarSpeaking(false);
 }
 
-// Audio player queue drained — server will send audio_complete when truly done.
-// This is only a safety fallback in case that message never arrives.
+// Audio player queue drained. The queue ALSO drains in the gaps between
+// sentence clips (clip N ended, clip N+1 still in flight — gaps can exceed
+// 500ms with the HD voice), so the avatar is deliberately NOT stilled here:
+// any drain-driven still causes a per-sentence hide/unhide blink. The avatar
+// goes still ONLY on the server's audio_complete, which is now timed from the
+// REAL audio duration (pipeline byte-math) so it lands at the true end of the
+// reply. This callback only arms the safety fallback in case audio_complete
+// never arrives.
 function onPlaybackIdle() {
     clearTimeout(safetyTimer);
     safetyTimer = setTimeout(() => {
@@ -165,8 +171,10 @@ const HANDLERS = {
         clearTranscript();
         enqueue(msg.data);
         setState('speaking');
-        setAvatarSpeaking(true);
         enterSpeaking();             // ← mute mic while bot talks
+        // NOTE: avatar mouth animation starts on the real 'playing' event
+        // (see setOnFirstPlaying below), not here — this fires the instant
+        // the WS message arrives, well before the audio is actually audible.
     },
 
     audio_complete() {
@@ -294,6 +302,7 @@ function stop() {
 micBtn.disabled = false;
 setState('idle');
 setOnIdle(onPlaybackIdle);
+setOnFirstPlaying(() => setAvatarSpeaking(true));   // mouth starts on real audible playback
 startViz(document.getElementById('viz'));   // idle bars until a session starts
 
 micBtn.addEventListener('click', () => {

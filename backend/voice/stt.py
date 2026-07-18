@@ -94,8 +94,8 @@ class WebDeepgramSTTHandler(DeepgramSTTHandler):
         "sample_rate":      16000,        # Web: browser AudioWorklet at 16kHz
         "channels":         1,
         "interim_results":  "true",
-        "smart_format":     "true",
-        "punctuate":        "true",
+        "smart_format":     "false",
+        "punctuate":        "false",
         "endpointing":      "500",          # 500ms of silence ends a turn (speech_final)
         "utterance_end_ms": "1000",
         "vad_events":       "true",

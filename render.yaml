@@ -27,7 +27,7 @@ services:
       - key: AZURE_SPEECH_REGION
         value: centralindia
       - key: TTS_VOICE_NAME
-        value: hi-IN-AartiNeural
+        value: en-IN-Meera:DragonHDLatestNeural
       - key: TTS_VOICE_LANGUAGE
         value: hi-IN
       # ── Deepgram STT ─────────────────────────────────────────────────────
