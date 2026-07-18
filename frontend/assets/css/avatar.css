@@ -51,7 +51,7 @@ body {
     /* Real showroom photo on top; CSS gradient below = automatic fallback
        if the image is ever missing. */
     background:
-        url('../image/showroom-bg.png?v=6') center center / cover no-repeat,
+        url('../image/showroom-bg.png?v=7') center center / cover no-repeat,
         linear-gradient(180deg, var(--bg-grad-1) 0%, var(--bg-grad-2) 62%, #cdd9c9 100%);
     background-color: var(--bg);
     pointer-events: none;
