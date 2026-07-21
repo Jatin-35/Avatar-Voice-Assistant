@@ -36,8 +36,8 @@ CORS_ORIGINS: list[str] = os.getenv(
 ).split(",")
 
 # ── TTS voice ─────────────────────────────────────────────────────────────────
-# Meera Dragon HD — natural pacing, verified on centralindia. Env can override.
-TTS_VOICE_NAME: str = os.getenv("TTS_VOICE_NAME", "en-IN-Meera:DragonHDLatestNeural")
+# Ananya — verified on centralindia. Env can override.
+TTS_VOICE_NAME: str = os.getenv("TTS_VOICE_NAME", "hi-IN-AnanyaNeural")
 TTS_VOICE_LANGUAGE: str = os.getenv("TTS_VOICE_LANGUAGE", "hi-IN")
 
 # ── ElevenLabs TTS ────────────────────────────────────────────────────────────
